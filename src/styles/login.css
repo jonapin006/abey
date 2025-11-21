@@ -1,0 +1,142 @@
+body, html, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, Helvetica, sans-serif;
+  background: #fff;
+}
+
+/* Contenedor principal del login */
+.login-main-bg {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background: #fff;
+}
+
+/* Imagen de fondo lateral con diagonal */
+.login-left-img {
+  flex: 1.5 0 0;
+  clip-path: polygon(0 0, 85% 0, 70% 100%, 0% 100%);
+  min-width: 370px;
+}
+
+/* Panel derecho del login */
+.login-side-right {
+  flex: 2 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  min-width: 400px;
+}
+
+/* Logo arriba del login */
+.login-logo {
+  width: 250px;
+  max-width: 90%;
+  margin-bottom: 2.3rem;
+  margin-top: -1.2rem;
+  display: block;
+}
+
+/* Formulario principal */
+.login-visual-form {
+  width: 100%;
+  max-width: 340px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Grupo de input+label */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.1rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #80ad69;
+  margin-bottom: 0.32rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+}
+
+/* Campo de texto e input password */
+.form-group input {
+  border-radius: 7px;
+  border: 2px solid #80c47b;
+  background: #fff;
+  padding: 0.7rem 1.17rem;
+  font-size: 1.09rem;
+  outline: none;
+  transition: border 0.16s;
+  margin-bottom: 0.14rem;
+  color: #363f4b;
+}
+
+.form-group input:focus {
+  border: 2px solid #005eea;
+}
+
+/* Botón principal */
+.btn-login-main {
+  background: #2179bd;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 24px;
+  padding: 0.72rem 0;
+  font-size: 1.13rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-top: 19px;
+  width: 148px;
+  align-self: center;
+  transition: background 0.17s, transform 0.13s;
+  box-shadow: 0 3px 13px rgba(44,120,192,0.07);
+}
+
+.btn-login-main:active, .btn-login-main:hover {
+  background: #0e365d;
+}
+
+/* Para Password box, si agregas el icono de ojo */
+.password-box {
+  position: relative;
+  width: 100%;
+}
+
+.password-box input[type="password"] {
+  width: 100%;
+  padding-right: 32px;
+}
+
+.password-box .toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-52%);
+  font-size: 1.1rem;
+  color: #2992ff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Errores */
+.login-error {
+  color: #db3357;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  padding: 0.55rem 1rem;
+  background: #ffe7e9;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 1rem;
+}

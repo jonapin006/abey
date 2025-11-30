@@ -1,15 +1,26 @@
 import React from 'react';
+import Box from '@mui/material/Box';
 import Sidebar from './Sidebar';
-import '../styles/layout.css';
+
+const drawerWidth = 240;
 
 function Layout({ children }) {
   return (
-    <div className="layout">
+    <Box sx={{ display: 'flex' }}>
       <Sidebar />
-      <div className="layout-content">
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: `calc(100% - ${drawerWidth}px)`,
+          minHeight: '100vh',
+          backgroundColor: 'background.default',
+        }}
+      >
         {children}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

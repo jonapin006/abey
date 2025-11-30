@@ -1,5 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
@@ -7,20 +11,26 @@ import Dashboard from './pages/Dashboard';
 import Usuarios from './pages/Usuarios';
 import Reportes from './pages/Reportes';
 import Consultoria from './pages/Consultoria';
+import Indicadores from './pages/Indicadores';
 import Tutoriales from './pages/Tutoriales';
 import Soporte from './pages/Soporte';
 import Ayuda from './pages/Ayuda';
 import Perfil from './pages/Perfil';
 import SignupPage from './pages/SignupPage';
+import ActionPlanView from './pages/ActionPlanView';
 import ChatWidget from './components/ChatWidget';
+import theme from './theme';
 import './styles/app.css';
 
-// Componente para proteger rutas privadas
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="loading-screen">Cargando...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return user ? children : <Navigate to="/login" />;
@@ -34,7 +44,7 @@ function AppContent() {
       <Routes>
         {/* Ruta pública */}
         <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
-        
+
         {/* Rutas privadas (protegidas) */}
         <Route
           path="/dashboard"
@@ -65,6 +75,14 @@ function AppContent() {
           element={
             <PrivateRoute>
               <Consultoria />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/indicadores"
+          element={
+            <PrivateRoute>
+              <Indicadores />
             </PrivateRoute>
           }
         />
@@ -108,6 +126,14 @@ function AppContent() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/action-plan/:diagnosticId/:responseId"
+          element={
+            <PrivateRoute>
+              <ActionPlanView />
+            </PrivateRoute>
+          }
+        />
 
         {/* Redirección por defecto */}
         <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
@@ -122,11 +148,14 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter basename="/abey">
-        <AppContent />
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
+        <BrowserRouter basename="/abey">
+          <AppContent />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

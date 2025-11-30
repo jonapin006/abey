@@ -10,6 +10,7 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
   React.useEffect(() => {
@@ -18,11 +19,13 @@ export default function ChatWidget() {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
+
     const userMsg = { text: input, sender: "yo" };
     setMessages([...messages, userMsg]);
     setInput("");
-    
+    setIsTyping(true);
+
     try {
       const resp = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -32,11 +35,14 @@ export default function ChatWidget() {
           message: input
         }),
       });
+
       const data = await resp.json();
-      const botReply = Array.isArray(data) ? data[0]?.reply : (data.reply || "Respuesta recibida");
+      const botReply = Array.isArray(data) ? (data[0]?.reply || "Respuesta recibida") : (data.reply || "Respuesta recibida");
       setMessages((msgs) => [...msgs, { text: botReply, sender: "bot" }]);
     } catch (err) {
       setMessages((msgs) => [...msgs, { text: "No se pudo conectar con N8N", sender: "error" }]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -65,7 +71,12 @@ export default function ChatWidget() {
                 )}
               </div>
             )}
-            <div ref={messagesEndRef}/>
+            {isTyping && (
+              <div className="chat-msg bot typing">
+                Escribiendo...
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
           <form className="chat-input" onSubmit={sendMessage}>
             <input
@@ -74,8 +85,9 @@ export default function ChatWidget() {
               onChange={e => setInput(e.target.value)}
               placeholder="Escribe tu mensaje..."
               autoFocus
+              disabled={isTyping}
             />
-            <button type="submit">Enviar</button>
+            <button type="submit" disabled={isTyping}>Enviar</button>
           </form>
         </div>
       )}

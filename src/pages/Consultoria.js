@@ -44,8 +44,8 @@ function Consultoria() {
 
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-      // Fetch diagnostics
-      const diagnosticsUrl = `${API_URL}/environmental_diagnostics?user_id=eq.${user.id}&order=created_at.desc`;
+      // Fetch diagnostics with creator information using the optimized view
+      const diagnosticsUrl = `${API_URL}/environmental_diagnostics_with_creator?user_id=eq.${user.id}&order=created_at.desc`;
       const diagnosticsResponse = await fetch(diagnosticsUrl, {
         headers: {
           'Accept': 'application/json',
@@ -61,7 +61,7 @@ function Consultoria() {
 
       // For each diagnostic, calculate completion percentage
       const diagnosticsWithCompletion = await Promise.all(
-        diagnosticsData.map(async (diagnostic) => {
+        diagnosticsData.map(async (diagnostic) => { // Changed from diagnosticsWithUserInfo to diagnosticsData
           try {
             // Fetch all responses for this diagnostic (including all parts)
             const actionPlansUrl = `${API_URL}/diagnostic_responses_with_questions?diagnostic_id=eq.${diagnostic.id}`;
@@ -195,7 +195,7 @@ function Consultoria() {
                     </Typography>
 
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      <strong>ID:</strong> {diagnostic.id.substring(0, 8)}...
+                      <strong>Creado por:</strong> {diagnostic.creator_name || diagnostic.creator_email || 'Usuario desconocido'}
                     </Typography>
 
                     {/* Completion Percentage */}

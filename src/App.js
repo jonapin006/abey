@@ -12,6 +12,7 @@ import Usuarios from './pages/Usuarios';
 import Reportes from './pages/Reportes';
 import Consultoria from './pages/Consultoria';
 import Indicadores from './pages/Indicadores';
+import IndicadoresMatriz from './pages/IndicadoresMatriz';
 import Tutoriales from './pages/Tutoriales';
 import Soporte from './pages/Soporte';
 import Ayuda from './pages/Ayuda';
@@ -83,6 +84,14 @@ function AppContent() {
           element={
             <PrivateRoute>
               <Indicadores />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/indicadores/matriz/:type/:year"
+          element={
+            <PrivateRoute>
+              <IndicadoresMatriz />
             </PrivateRoute>
           }
         />

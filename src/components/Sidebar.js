@@ -60,7 +60,24 @@ function Sidebar() {
 
       if (!userEmail) {
         setMenuItems([]);
+        setLoading(false);
         return;
+      }
+
+      // Check if menu is cached in sessionStorage
+      const cacheKey = `menu_items_${userEmail}`;
+      const cachedMenus = sessionStorage.getItem(cacheKey);
+
+      if (cachedMenus) {
+        try {
+          const parsedMenus = JSON.parse(cachedMenus);
+          setMenuItems(parsedMenus);
+          setLoading(false);
+          return;
+        } catch (e) {
+          // If parsing fails, continue to fetch
+          sessionStorage.removeItem(cacheKey);
+        }
       }
 
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -77,6 +94,7 @@ function Sidebar() {
 
       if (!userPermResponse.ok) {
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -84,6 +102,7 @@ function Sidebar() {
 
       if (!userPermissions || userPermissions.length === 0) {
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -101,6 +120,7 @@ function Sidebar() {
 
       if (!rolesResponse.ok) {
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -108,6 +128,7 @@ function Sidebar() {
 
       if (!roles || roles.length === 0) {
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -126,6 +147,7 @@ function Sidebar() {
       if (!permissionsResponse.ok) {
         const errorText = await permissionsResponse.text();
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -133,6 +155,7 @@ function Sidebar() {
 
       if (!permissions || permissions.length === 0) {
         setMenuItems([]);
+        setLoading(false);
         return;
       }
 
@@ -153,6 +176,8 @@ function Sidebar() {
       if (menusResponse.ok) {
         const menus = await menusResponse.json();
         setMenuItems(menus);
+        // Cache the menus in sessionStorage
+        sessionStorage.setItem(cacheKey, JSON.stringify(menus));
       } else {
         const errorText = await menusResponse.text();
         setMenuItems([]);
@@ -165,6 +190,12 @@ function Sidebar() {
   };
 
   const handleLogout = async () => {
+    // Clear menu cache on logout
+    const { data: userData } = await supabase.auth.getUser();
+    const userEmail = userData?.user?.email;
+    if (userEmail) {
+      sessionStorage.removeItem(`menu_items_${userEmail}`);
+    }
     await supabase.auth.signOut();
     navigate('/login');
   };

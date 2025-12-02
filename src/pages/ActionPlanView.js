@@ -76,7 +76,7 @@ function ActionPlanView() {
                 question_id: item.question_id
             });
 
-            const url = `${process.env.REACT_APP_N8N_WEBHOOK_URL}?${params.toString()}`;
+            const url = `${process.env.REACT_APP_N8N_WEBHOOK_URL}/webhook/6bd9eda3-8a6d-4916-bfec-a66fd5276cec?${params.toString()}`;
 
             const response = await fetch(url, {
                 method: 'GET',

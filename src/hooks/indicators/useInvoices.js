@@ -1,0 +1,42 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabaseClient';
+import { invoiceService } from '../../services/indicators/invoiceService';
+
+/**
+ * Custom hook for managing invoices list
+ */
+export const useInvoices = (filters) => {
+    const [invoices, setInvoices] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchInvoices = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+
+            const data = await invoiceService.fetchInvoices(filters, token);
+            setInvoices(data);
+        } catch (err) {
+            console.error('Error fetching invoices:', err);
+            setError('Error al cargar las facturas');
+            setInvoices([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchInvoices();
+    }, [filters.year, filters.company_id, filters.type, filters.headquarters_id]);
+
+    return {
+        invoices,
+        loading,
+        error,
+        refetch: fetchInvoices,
+    };
+};

@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import Layout from '../components/Layout.jsx';
 
-function Soporte() {
+function Support() {
   return (
     <Layout>
       <Container maxWidth="xl">
@@ -19,4 +19,4 @@ function Soporte() {
   );
 }
 
-export default Soporte;
+export default Support;

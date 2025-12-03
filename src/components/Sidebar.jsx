@@ -201,9 +201,9 @@ function Sidebar() {
   };
 
   const footerItems = [
-    { path: '/soporte', icon: <SupportIcon />, label: 'Soporte' },
-    { path: '/ayuda', icon: <HelpIcon />, label: 'Ayuda' },
-    { path: '/perfil', icon: <PersonIcon />, label: 'Perfil' },
+    { path: '/support', icon: <SupportIcon />, label: 'Soporte' },
+    { path: '/help', icon: <HelpIcon />, label: 'Ayuda' },
+    { path: '/profile', icon: <PersonIcon />, label: 'Perfil' },
   ];
 
   return (

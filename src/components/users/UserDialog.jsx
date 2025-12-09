@@ -40,16 +40,30 @@ export const UserDialog = ({
                 <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <TextField
                         label="Email"
+                        type="email"
                         value={formData.email}
                         onChange={(e) => onFormChange('email', e.target.value)}
                         fullWidth
+                        required
                         disabled={isEditing}
                     />
+                    {!isEditing && (
+                        <TextField
+                            label="Contraseña"
+                            type="password"
+                            value={formData.password}
+                            onChange={(e) => onFormChange('password', e.target.value)}
+                            fullWidth
+                            required
+                            placeholder="Mínimo 6 caracteres"
+                        />
+                    )}
                     <TextField
                         label="Nombre Completo"
                         value={formData.full_name}
                         onChange={(e) => onFormChange('full_name', e.target.value)}
                         fullWidth
+                        required
                     />
                     <FormControl fullWidth>
                         <InputLabel>Rol</InputLabel>

@@ -8,19 +8,18 @@ import {
     IconButton,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import Layout from '../components/Layout.jsx';
-import { supabase } from '../lib/supabaseClient';
-import { n8nService } from '../services/indicators/n8nService';
-import { useInvoiceFilters } from '../hooks/indicators/useInvoiceFilters';
-import { useInvoices } from '../hooks/indicators/useInvoices';
-import { useInvoiceUpload } from '../hooks/indicators/useInvoiceUpload';
-import { useCompanies } from '../hooks/companies/useCompanies';
-import { useHeadquarters } from '../hooks/headquarters/useHeadquarters';
-import { InvoiceFilters } from '../components/indicators/InvoiceFilters';
-import { MatrixButtons } from '../components/indicators/MatrixButtons';
-import { InvoiceTable } from '../components/indicators/InvoiceTable';
-import { InvoiceUploadModal } from '../components/indicators/InvoiceUploadModal';
-import { KPI } from '../components/indicators/KPI';
+import Layout from '../../components/Layout.jsx';
+import { supabase } from '../../lib/supabaseClient';
+import { n8nService } from '../../services/indicators/n8nService';
+import { useInvoiceFilters } from '../../hooks/indicators/useInvoiceFilters';
+import { useInvoices } from '../../hooks/indicators/useInvoices';
+import { useInvoiceUpload } from '../../hooks/indicators/useInvoiceUpload';
+import { useCompanies } from '../../hooks/companies/useCompanies';
+import { useHeadquarters } from '../../hooks/headquarters/useHeadquarters';
+import { InvoiceFilters } from '../../components/indicators/InvoiceFilters';
+import { MatrixButtons } from '../../components/indicators/MatrixButtons';
+import { InvoiceTable } from '../../components/indicators/InvoiceTable';
+import { InvoiceUploadModal } from '../../components/indicators/InvoiceUploadModal';
 
 // Generate years array (current year + 5 years back)
 const generateYears = () => {
@@ -28,7 +27,7 @@ const generateYears = () => {
     return Array.from({ length: 6 }, (_, i) => currentYear - i);
 };
 
-function Indicadores() {
+function InvoiceHistory() {
     const [success, setSuccess] = useState(null);
     const years = generateYears();
 
@@ -91,7 +90,7 @@ function Indicadores() {
                 {/* Header */}
                 <Box sx={{ mb: 4 }}>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        Indicadores Ambientales
+                        Historial de Facturas
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
                         Gestión y carga de facturas de servicios públicos
@@ -110,25 +109,20 @@ function Indicadores() {
                     </Alert>
                 )}
 
-                {/* Filters - Compact at top */}
-                <Paper sx={{ p: 2, mb: 3 }}>
+                {/* Filters + Matrix Buttons */}
+                <Paper sx={{ p: 3, mb: 4 }}>
                     <InvoiceFilters
                         filters={filters}
                         onFilterChange={updateFilter}
                         companies={companies}
                         headquarters={headquarters}
                         years={years}
-                        compact={true}
+                    />
+                    <MatrixButtons
+                        year={filters.year}
+                        onNewInvoice={handleOpenModal}
                     />
                 </Paper>
-
-                {/* KPI Dashboard */}
-                <Box sx={{ mb: 4 }}>
-                    <KpiDashboard
-                        companyId={filters.company_id}
-                        onUploadClick={handleOpenModal}
-                    />
-                </Box>
 
                 {/* Invoice Table */}
                 <Paper>
@@ -140,7 +134,7 @@ function Indicadores() {
                             alignItems: 'center',
                         }}
                     >
-                        <Typography variant="h6">Histórico de Facturas (Archivos)</Typography>
+                        <Typography variant="h6">Facturas Cargadas</Typography>
                         <IconButton onClick={refetch}>
                             <RefreshIcon />
                         </IconButton>
@@ -172,4 +166,4 @@ function Indicadores() {
     );
 }
 
-export default Indicadores;
+export default InvoiceHistory;

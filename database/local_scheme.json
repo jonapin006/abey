@@ -1,0 +1,2460 @@
+[
+    {
+        "table": "schema_migrations",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "version",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "instances",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "uuid",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "raw_base_config",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "question_requirements",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "question_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "requirement_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_primary",
+                "type": "boolean",
+                "default": "true",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "question_id",
+                "constraint": "question_requirements_question_id_fkey",
+                "foreign_table": "diagnostic_questions",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "requirement_id",
+                "constraint": "question_requirements_requirement_id_fkey",
+                "foreign_table": "requirements",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "standard_types",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "category",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "color",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "requirements",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "code",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "title",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_mandatory",
+                "type": "boolean",
+                "default": "false",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "standard_id",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "standard_id",
+                "constraint": "fk_standard",
+                "foreign_table": "standard_types",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "users",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "instance_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "aud",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "role",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "encrypted_password",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email_confirmed_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "invited_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "confirmation_token",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "confirmation_sent_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "recovery_token",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "recovery_sent_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email_change_token_new",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email_change",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email_change_sent_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "last_sign_in_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "raw_app_meta_data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "raw_user_meta_data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_super_admin",
+                "type": "boolean",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "phone",
+                "type": "text",
+                "default": "NULL::character varying",
+                "nullable": "YES"
+            },
+            {
+                "name": "phone_confirmed_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "phone_change",
+                "type": "text",
+                "default": "''::character varying",
+                "nullable": "YES"
+            },
+            {
+                "name": "phone_change_token",
+                "type": "character varying",
+                "default": "''::character varying",
+                "nullable": "YES"
+            },
+            {
+                "name": "phone_change_sent_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "confirmed_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email_change_token_current",
+                "type": "character varying",
+                "default": "''::character varying",
+                "nullable": "YES"
+            },
+            {
+                "name": "email_change_confirm_status",
+                "type": "smallint",
+                "default": "0",
+                "nullable": "YES"
+            },
+            {
+                "name": "banned_until",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "reauthentication_token",
+                "type": "character varying",
+                "default": "''::character varying",
+                "nullable": "YES"
+            },
+            {
+                "name": "reauthentication_sent_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_sso_user",
+                "type": "boolean",
+                "default": "false",
+                "nullable": "NO"
+            },
+            {
+                "name": "deleted_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_anonymous",
+                "type": "boolean",
+                "default": "false",
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "audit_log_entries",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "instance_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "payload",
+                "type": "json",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "ip_address",
+                "type": "character varying",
+                "default": "''::character varying",
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "refresh_tokens",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "instance_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "id",
+                "type": "bigint",
+                "default": "nextval('auth.refresh_tokens_id_seq'::regclass)",
+                "nullable": "NO"
+            },
+            {
+                "name": "token",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "user_id",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "revoked",
+                "type": "boolean",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "parent",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "session_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "session_id",
+                "constraint": "refresh_tokens_session_id_fkey",
+                "foreign_table": "sessions",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "requirement_tasks",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "requirement_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "task_order",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "task_title",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "task_description",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "expected_deliverable",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "estimated_days",
+                "type": "integer",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "resources",
+                "type": "ARRAY",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "priority",
+                "type": "character varying",
+                "default": "'media'::character varying",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "requirement_id",
+                "constraint": "requirement_tasks_requirement_id_fkey",
+                "foreign_table": "requirements",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "mfa_factors",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "friendly_name",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "factor_type",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "status",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "secret",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "last_challenged_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "last_webauthn_challenge_data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "phone",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "web_authn_credential",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "web_authn_aaguid",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "mfa_factors_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "sessions",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "factor_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "aal",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "not_after",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "refreshed_at",
+                "type": "timestamp without time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "user_agent",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "ip",
+                "type": "inet",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "tag",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "oauth_client_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "refresh_token_hmac_key",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "refresh_token_counter",
+                "type": "bigint",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "sessions_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "mfa_amr_claims",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "session_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "authentication_method",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "session_id",
+                "constraint": "mfa_amr_claims_session_id_fkey",
+                "foreign_table": "sessions",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "mfa_challenges",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "factor_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "verified_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "ip_address",
+                "type": "inet",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "otp_code",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "web_authn_session_data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "factor_id",
+                "constraint": "mfa_challenges_auth_factor_id_fkey",
+                "foreign_table": "mfa_factors",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "sso_providers",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "resource_id",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "sso_domains",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "sso_provider_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "domain",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "sso_provider_id",
+                "constraint": "sso_domains_sso_provider_id_fkey",
+                "foreign_table": "sso_providers",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "saml_providers",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "sso_provider_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "entity_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "metadata_xml",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "metadata_url",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "attribute_mapping",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "sso_provider_id",
+                "constraint": "saml_providers_sso_provider_id_fkey",
+                "foreign_table": "sso_providers",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "identities",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "provider_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "identity_data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "provider",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "last_sign_in_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "identities_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "saml_relay_states",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "sso_provider_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "request_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "for_email",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "redirect_to",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "from_ip_address",
+                "type": "inet",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "flow_state_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "sso_provider_id",
+                "constraint": "saml_relay_states_sso_provider_id_fkey",
+                "foreign_table": "sso_providers",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            },
+            {
+                "column": "flow_state_id",
+                "constraint": "saml_relay_states_flow_state_id_fkey",
+                "foreign_table": "flow_state",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "flow_state",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "auth_code",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "code_challenge_method",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "code_challenge",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "provider_type",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "provider_access_token",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "provider_refresh_token",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "authentication_method",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "oauth_clients",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "client_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "client_secret_hash",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "registration_type",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "redirect_uris",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "grant_types",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "client_name",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "client_uri",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "logo_uri",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "NO"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "NO"
+            },
+            {
+                "name": "deleted_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "headquarters",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "company_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "company_id",
+                "constraint": "headquarters_company_id_fkey",
+                "foreign_table": "companies",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "companies",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "company_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "industry",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "address",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "city",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "country",
+                "type": "text",
+                "default": "'Colombia'::text",
+                "nullable": "YES"
+            },
+            {
+                "name": "phone",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "website",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "contact_email",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "status",
+                "type": "text",
+                "default": "'active'::text",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "user_profiles",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "company_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "phone",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "position",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "is_active",
+                "type": "boolean",
+                "default": "true",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "role_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "email",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "full_name",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "user_profiles_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            },
+            {
+                "column": "company_id",
+                "constraint": "user_profiles_company_id_fkey",
+                "foreign_table": "companies",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "role_id",
+                "constraint": "user_profiles_role_id_fkey",
+                "foreign_table": "roles",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "roles",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "hierarchy_level",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "diagnostic_questions",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "default": "nextval('diagnostic_questions_id_seq'::regclass)",
+                "nullable": "NO"
+            },
+            {
+                "name": "part_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "question_text",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "part_id",
+                "constraint": "fk_part",
+                "foreign_table": "diagnostic_parts",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "invoices",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "file_url",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "file_name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "type",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "year",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "headquarters_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "status",
+                "type": "text",
+                "default": "'Pendiente'::text",
+                "nullable": "YES"
+            },
+            {
+                "name": "data",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "invoices_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            },
+            {
+                "column": "headquarters_id",
+                "constraint": "invoices_headquarters_id_fkey",
+                "foreign_table": "headquarters",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "diagnostic_responses",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "diagnostic_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "question_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "user_response",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "diagnostic_id",
+                "constraint": "diagnostic_responses_diagnostic_id_fkey",
+                "foreign_table": "environmental_diagnostics",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "diagnostic_id",
+                "constraint": "fk_diagnostic",
+                "foreign_table": "environmental_diagnostics",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "question_id",
+                "constraint": "fk_question",
+                "foreign_table": "diagnostic_questions",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "permissions",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "resource",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "action",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "role_permissions",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "role_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "permission_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "role_id",
+                "constraint": "role_permissions_role_id_fkey",
+                "foreign_table": "roles",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "permission_id",
+                "constraint": "role_permissions_permission_id_fkey",
+                "foreign_table": "permissions",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "diagnostic_parts",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "default": "nextval('diagnostic_parts_id_seq'::regclass)",
+                "nullable": "NO"
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "environmental_diagnostics",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "company_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "status",
+                "type": "text",
+                "default": "'in_progress'::text",
+                "nullable": "YES"
+            },
+            {
+                "name": "last_question_answered",
+                "type": "integer",
+                "default": "0",
+                "nullable": "YES"
+            },
+            {
+                "name": "last_part",
+                "type": "integer",
+                "default": "1",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "title",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "company_id",
+                "constraint": "environmental_diagnostics_company_id_fkey",
+                "foreign_table": "companies",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "user_id",
+                "constraint": "fk_user",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "one_time_tokens",
+        "schema": "auth",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "user_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "token",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "expires_at",
+                "type": "timestamp without time zone",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "constraint": "one_time_tokens_user_id_fkey",
+                "foreign_table": "users",
+                "foreign_column": "id",
+                "foreign_schema": "auth"
+            }
+        ]
+    },
+    {
+        "table": "diagnostic_question_categories",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "question_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "category_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "category_id",
+                "constraint": "diagnostic_question_categories_category_id_fkey",
+                "foreign_table": "categories",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "question_id",
+                "constraint": "fk_question_category",
+                "foreign_table": "diagnostic_questions",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "categories",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "default": "nextval('categories_id_seq'::regclass)",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "action_plans",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "diagnostic_response_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "status",
+                "type": "text",
+                "default": "'Por hacer'::text",
+                "nullable": "NO"
+            },
+            {
+                "name": "plan_url",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "generated_plan",
+                "type": "jsonb",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "generated_at",
+                "type": "timestamp with time zone",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "diagnostic_response_id",
+                "constraint": "action_plans_diagnostic_response_id_fkey",
+                "foreign_table": "diagnostic_responses",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "category_documents",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "category_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "document_id",
+                "type": "integer",
+                "default": null,
+                "nullable": "NO"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "category_id",
+                "constraint": "category_documents_category_id_fkey",
+                "foreign_table": "categories",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "document_id",
+                "constraint": "category_documents_document_id_fkey",
+                "foreign_table": "documents",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "documents",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "integer",
+                "default": "nextval('documents_id_seq'::regclass)",
+                "nullable": "NO"
+            },
+            {
+                "name": "title",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "file_path",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "embedding",
+                "type": "USER-DEFINED",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "content",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "menu_items",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "path",
+                "type": "character varying",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "icon",
+                "type": "character varying",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "parent_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "order_index",
+                "type": "integer",
+                "default": "0",
+                "nullable": "YES"
+            },
+            {
+                "name": "is_active",
+                "type": "boolean",
+                "default": "true",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "parent_id",
+                "constraint": "menu_items_parent_id_fkey",
+                "foreign_table": "menu_items",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "role_menu_permissions",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "role_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "menu_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "can_view",
+                "type": "boolean",
+                "default": "true",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp without time zone",
+                "default": "now()",
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "role_id",
+                "constraint": "role_menu_permissions_role_id_fkey",
+                "foreign_table": "roles",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            },
+            {
+                "column": "menu_id",
+                "constraint": "role_menu_permissions_menu_id_fkey",
+                "foreign_table": "menu_items",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    },
+    {
+        "table": "buckets",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "owner",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "public",
+                "type": "boolean",
+                "default": "false",
+                "nullable": "YES"
+            },
+            {
+                "name": "avif_autodetection",
+                "type": "boolean",
+                "default": "false",
+                "nullable": "YES"
+            },
+            {
+                "name": "file_size_limit",
+                "type": "bigint",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "allowed_mime_types",
+                "type": "ARRAY",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": []
+    },
+    {
+        "table": "objects",
+        "schema": "public",
+        "columns": [
+            {
+                "name": "id",
+                "type": "uuid",
+                "default": "gen_random_uuid()",
+                "nullable": "NO"
+            },
+            {
+                "name": "bucket_id",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "default": null,
+                "nullable": "NO"
+            },
+            {
+                "name": "owner",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "owner_id",
+                "type": "uuid",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "user_metadata",
+                "type": "jsonb",
+                "default": "'{}'::jsonb",
+                "nullable": "YES"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "last_accessed_at",
+                "type": "timestamp with time zone",
+                "default": "now()",
+                "nullable": "YES"
+            },
+            {
+                "name": "metadata",
+                "type": "jsonb",
+                "default": "'{}'::jsonb",
+                "nullable": "YES"
+            },
+            {
+                "name": "path_tokens",
+                "type": "ARRAY",
+                "default": null,
+                "nullable": "YES"
+            },
+            {
+                "name": "version",
+                "type": "text",
+                "default": null,
+                "nullable": "YES"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "bucket_id",
+                "constraint": "objects_bucket_id_fkey",
+                "foreign_table": "buckets",
+                "foreign_column": "id",
+                "foreign_schema": "storage"
+            },
+            {
+                "column": "bucket_id",
+                "constraint": "objects_bucket_id_fkey",
+                "foreign_table": "buckets",
+                "foreign_column": "id",
+                "foreign_schema": "public"
+            }
+        ]
+    }
+]

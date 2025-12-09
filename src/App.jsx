@@ -9,9 +9,12 @@ import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Users from './pages/Users.jsx';
+import Companies from './pages/Companies.jsx';
 import Reports from './pages/Reports.jsx';
 import Consulting from './pages/Consulting.jsx';
 import Indicators from './pages/Indicators.jsx';
+import InvoiceHistory from './pages/indicators/InvoiceHistory';
+import KPIPage from './pages/indicators/KPIPage';
 import IndicatorsMatrix from './pages/IndicatorsMatrix.jsx';
 import Tutorials from './pages/Tutorials.jsx';
 import Support from './pages/Support.jsx';
@@ -64,6 +67,14 @@ function AppContent() {
           }
         />
         <Route
+          path="/companies"
+          element={
+            <PrivateRoute>
+              <Companies />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/reports"
           element={
             <PrivateRoute>
@@ -81,9 +92,21 @@ function AppContent() {
         />
         <Route
           path="/indicators"
+          element={<Navigate to="/indicators/invoices" replace />}
+        />
+        <Route
+          path="/indicators/invoices"
           element={
             <PrivateRoute>
-              <Indicators />
+              <InvoiceHistory />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/indicators/dashboard"
+          element={
+            <PrivateRoute>
+              <KPIPage />
             </PrivateRoute>
           }
         />

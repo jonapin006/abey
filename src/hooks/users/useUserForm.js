@@ -10,6 +10,7 @@ export const useUserForm = (onSuccess) => {
     const [editingUser, setEditingUser] = useState(null);
     const [formData, setFormData] = useState({
         email: '',
+        password: '',
         full_name: '',
         role_id: '',
         company_id: '',
@@ -22,6 +23,7 @@ export const useUserForm = (onSuccess) => {
             setEditingUser(user);
             setFormData({
                 email: user.email || '',
+                password: '',
                 full_name: user.full_name || '',
                 role_id: user.role_id || '',
                 company_id: user.company_id || '',
@@ -30,6 +32,7 @@ export const useUserForm = (onSuccess) => {
             setEditingUser(null);
             setFormData({
                 email: '',
+                password: '',
                 full_name: '',
                 role_id: '',
                 company_id: '',
@@ -44,6 +47,7 @@ export const useUserForm = (onSuccess) => {
         setEditingUser(null);
         setFormData({
             email: '',
+            password: '',
             full_name: '',
             role_id: '',
             company_id: '',

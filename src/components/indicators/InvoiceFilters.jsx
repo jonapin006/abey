@@ -15,9 +15,10 @@ export const InvoiceFilters = ({
     companies,
     headquarters,
     years,
+    compact = false,
 }) => {
     return (
-        <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid container spacing={compact ? 1.5 : 2} sx={{ mb: compact ? 0 : 2 }}>
             {/* Year Filter */}
             <Grid item xs={6} sm={3}>
                 <FormControl fullWidth sx={{ minWidth: '150px' }}>

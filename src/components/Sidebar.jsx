@@ -10,16 +10,23 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ChatIcon from '@mui/icons-material/Chat';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SchoolIcon from '@mui/icons-material/School';
+import BusinessIcon from '@mui/icons-material/Business';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SupportIcon from '@mui/icons-material/Support';
 import HelpIcon from '@mui/icons-material/Help';
 import PersonIcon from '@mui/icons-material/Person';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,10 +36,14 @@ const drawerWidth = 240;
 const iconMap = {
   'home': <HomeIcon />,
   'users': <PeopleIcon />,
+  'business': <BusinessIcon />,
   'chart-bar': <BarChartIcon />,
   'message-square': <ChatIcon />,
   'trending-up': <TrendingUpIcon />,
   'graduation-cap': <SchoolIcon />,
+  'Receipt': <ReceiptIcon />,
+  'Dashboard': <DashboardIcon />,
+  'Assessment': <AssessmentIcon />,
 };
 
 function Sidebar() {
@@ -41,6 +52,7 @@ function Sidebar() {
   const { user } = useAuth();
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedMenus, setExpandedMenus] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -189,6 +201,34 @@ function Sidebar() {
     }
   };
 
+  // Organize menus into parent-child hierarchy
+  const organizeMenus = (menus) => {
+    const parentMenus = menus.filter(m => !m.parent_id);
+    return parentMenus.map(parent => ({
+      ...parent,
+      children: menus.filter(m => m.parent_id === parent.id)
+        .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+    })).sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
+  };
+
+  // Toggle menu expansion
+  const toggleExpand = (menuId) => {
+    setExpandedMenus(prev => ({
+      ...prev,
+      [menuId]: !prev[menuId]
+    }));
+  };
+
+  // Handle menu item click
+  const handleMenuClick = (menu) => {
+    // If menu has children or path starts with '#', toggle expand
+    if (menu.children?.length > 0 || menu.path?.startsWith('#')) {
+      toggleExpand(menu.id);
+    } else if (menu.path) {
+      navigate(menu.path);
+    }
+  };
+
   const handleLogout = async () => {
     // Clear menu cache on logout
     const { data: userData } = await supabase.auth.getUser();
@@ -236,30 +276,86 @@ function Sidebar() {
         </Box>
       ) : (
         <List sx={{ flexGrow: 1 }}>
-          {menuItems.map((item) => (
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton
-                selected={location.pathname === item.path}
-                onClick={() => navigate(item.path)}
-                sx={{
-                  color: 'white',
-                  '&.Mui-selected': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    },
-                  },
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ color: 'white', minWidth: 40 }}>
-                  {iconMap[item.icon] || <HomeIcon />}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </ListItemButton>
-            </ListItem>
+          {organizeMenus(menuItems).map((menu) => (
+            <React.Fragment key={menu.id}>
+              {menu.children && menu.children.length > 0 ? (
+                // Parent menu with children
+                <>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleMenuClick(menu)}
+                      sx={{
+                        color: 'white',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        },
+                      }}
+                    >
+                      <ListItemIcon sx={{ color: 'white', minWidth: 40 }}>
+                        {iconMap[menu.icon] || <HomeIcon />}
+                      </ListItemIcon>
+                      <ListItemText primary={menu.name} />
+                      {expandedMenus[menu.id] ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                  </ListItem>
+                  <Collapse in={expandedMenus[menu.id]} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {menu.children.map((child) => (
+                        <ListItem key={child.id} disablePadding>
+                          <ListItemButton
+                            selected={location.pathname === child.path}
+                            onClick={() => navigate(child.path)}
+                            sx={{
+                              pl: 4,
+                              color: 'white',
+                              '&.Mui-selected': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                },
+                              },
+                              '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                              },
+                            }}
+                          >
+                            <ListItemIcon sx={{ color: 'white', minWidth: 40 }}>
+                              {iconMap[child.icon] || <HomeIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={child.name} />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Collapse>
+                </>
+              ) : (
+                // Regular menu item without children
+                <ListItem disablePadding>
+                  <ListItemButton
+                    selected={location.pathname === menu.path}
+                    onClick={() => navigate(menu.path)}
+                    sx={{
+                      color: 'white',
+                      '&.Mui-selected': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        },
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: 'white', minWidth: 40 }}>
+                      {iconMap[menu.icon] || <HomeIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={menu.name} />
+                  </ListItemButton>
+                </ListItem>
+              )}
+            </React.Fragment>
           ))}
         </List>
       )}

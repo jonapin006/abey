@@ -1,0 +1,22 @@
+[Unit]
+Description=Abey Backend Node.js Server
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/var/www/abey/backend
+Environment="NODE_ENV=production"
+Environment="PORT=4000"
+Environment="REACT_APP_SUPABASE_URL=https://runzippy.com"
+Environment="REACT_APP_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJyb2xlIjoiYW5vbiIsImF1ZCI6ImF1dGhlbnRpY2F0ZWQiLCJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc2MzUxMzcxMSwiZXhwIjoyMDc5MDg5NzExfQ.9vuUmE-rAjzhnABXxKRmdk3u4PMjMC3M9R_7CN4j5fA"
+Environment="SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3NjUwNzQxNDcsImV4cCI6MjA4MDY1MDE0N30.H0kGGECE6NUwlfLxpwfIw7z4uvJcvI20smu-u_RB_xQ"
+ExecStart=/usr/bin/node /var/www/abey/backend/server.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=backend-abey
+
+[Install]
+WantedBy=multi-user.target

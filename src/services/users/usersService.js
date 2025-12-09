@@ -49,6 +49,7 @@ export const usersService = {
             const company = companiesData.find(c => c.id === profile.company_id);
 
             return {
+                id: profile.id, // Profile ID for deletion
                 user_id: profile.user_id,
                 email: profile.user_email,
                 full_name: profile.full_name || '',
@@ -89,7 +90,7 @@ export const usersService = {
      */
     saveUser: async (userData, isEditing, userId, token) => {
         if (isEditing) {
-            // Update existing user
+            // Update existing user profile
             const response = await fetch(`${API_URL}/user_profiles?user_id=eq.${userId}`, {
                 method: 'PATCH',
                 headers: {
@@ -104,28 +105,40 @@ export const usersService = {
             });
 
             if (!response.ok) {
-                throw new Error('Error al actualizar usuario');
+                const errorText = await response.text();
+                throw new Error(`Error al actualizar usuario: ${errorText}`);
             }
         } else {
-            // Create new user - this would typically involve Supabase Auth
-            // For now, just create the profile
-            const response = await fetch(`${API_URL}/user_profiles`, {
+            // Create new user in Supabase Auth first
+            // This requires calling your backend endpoint that uses Supabase Admin API
+            const createAuthUserResponse = await fetch(`${API_URL.replace('/api/v1', '')}/api/create-user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    'Prefer': 'return=representation',
                 },
                 body: JSON.stringify({
+                    email: userData.email,
+                    password: userData.password,
                     full_name: userData.full_name,
                     role_id: userData.role_id,
                     company_id: userData.company_id,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error('Error al crear usuario');
+            if (!createAuthUserResponse.ok) {
+                let errorMessage;
+                try {
+                    const errorData = await createAuthUserResponse.json();
+                    errorMessage = errorData.error || 'Error desconocido al crear usuario';
+                } catch (e) {
+                    errorMessage = await createAuthUserResponse.text();
+                }
+                throw new Error(errorMessage);
             }
+
+            const result = await createAuthUserResponse.json();
+            return result;
         }
     },
 
@@ -133,7 +146,8 @@ export const usersService = {
      * Delete user
      */
     deleteUser: async (userId, token) => {
-        const response = await fetch(`${API_URL}/user_profiles?user_id=eq.${userId}`, {
+        // Call backend endpoint to delete user from Auth and Profile
+        const response = await fetch(`${API_URL.replace('/api/v1', '')}/api/delete-user/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -141,7 +155,14 @@ export const usersService = {
         });
 
         if (!response.ok) {
-            throw new Error('Error al eliminar usuario');
+            let errorMessage;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || 'Error desconocido al eliminar usuario';
+            } catch (e) {
+                errorMessage = await response.text();
+            }
+            throw new Error(errorMessage);
         }
     },
 };

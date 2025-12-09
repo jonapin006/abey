@@ -68,4 +68,30 @@ export const n8nService = {
 
         return await response.blob();
     },
+
+    /**
+     * Trigger KPI generation workflow for a specific type
+     */
+    generateKpis: async (companyId, invoiceType, invoiceData, token) => {
+        const webhookUrl = `${N8N_BASE_URL}/webhook/generate-kpis`;
+
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                company_id: companyId,
+                invoice_type: invoiceType,
+                invoices: invoiceData
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al iniciar la generación de KPIs');
+        }
+
+        return await response.json();
+    }
 };

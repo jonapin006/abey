@@ -43,6 +43,18 @@ export const InvoiceUploadModal = ({
                         </Alert>
                     )}
 
+                    {/* Onboarding / Status Message */}
+                    {uploadForm.type && uploadForm.company_id && (
+                        <Alert severity="info" sx={{ mb: 2 }}>
+                            {/* This would ideally be dynamic based on actual counts passed as props, 
+                                but for now we'll show a generic helpful message since we don't have the counts prop yet 
+                                or we can add it to the component props. 
+                                Let's assume we want to be helpful. */}
+                            Subiendo factura de {uploadForm.type}.
+                            Los nuevos datos actualizarán tus indicadores automáticamente.
+                        </Alert>
+                    )}
+
                     <Grid container spacing={2}>
                         {/* Year */}
                         <Grid item xs={12}>

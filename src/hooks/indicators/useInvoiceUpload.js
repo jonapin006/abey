@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { invoiceService } from '../../services/indicators/invoiceService';
+import { uploadAndSaveInvoice, validateInvoiceFile, extractInfoFromFilename } from '../../services/indicators/invoiceUploadService';
 import { n8nService } from '../../services/indicators/n8nService';
+import { invoiceService } from '../../services/indicators/invoiceService';
 
 /**
  * Custom hook for managing invoice upload
+ * Delegates business logic to invoiceUploadService
  */
 export const useInvoiceUpload = (onSuccess) => {
     const [openModal, setOpenModal] = useState(false);
@@ -37,8 +39,33 @@ export const useInvoiceUpload = (onSuccess) => {
     };
 
     const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
+        const file = event.target.files[0];
+
+        if (!file) {
+            setSelectedFile(null);
+            return;
+        }
+
+        // Validate file
+        const validation = validateInvoiceFile(file);
+        if (!validation.isValid) {
+            setError(validation.error);
+            setSelectedFile(null);
+            return;
+        }
+
+        setSelectedFile(file);
         setError(null);
+
+        // Try to extract info from filename
+        const extractedInfo = extractInfoFromFilename(file.name);
+        if (extractedInfo.type || extractedInfo.year) {
+            setUploadForm(prev => ({
+                ...prev,
+                type: extractedInfo.type || prev.type,
+                year: extractedInfo.year || prev.year,
+            }));
+        }
     };
 
     const handleFormChange = (key, value) => {

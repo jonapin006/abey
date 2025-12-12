@@ -14,7 +14,7 @@ import {
     MenuItem
 } from '@mui/material';
 import { useKpiDashboard } from '../../hooks/indicators/useKpiDashboard';
-import { invoiceService } from '../../services/indicators/invoiceService';
+import { kpiService } from '../../services/indicators/kpiService';
 import { supabase } from '../../lib/supabaseClient';
 import { KpiStatusCard } from './KpiStatusCard';
 import { KpiTrendChart } from './KpiTrendChart';
@@ -59,7 +59,7 @@ export const KPI = ({ companyId, year = new Date().getFullYear(), onUploadClick 
             const token = session?.access_token;
             if (!token) throw new Error('No hay sesión activa');
 
-            await invoiceService.updateKpiTarget(baselineToEdit.id, newTargetValue, token);
+            await kpiService.updateKpiTarget(baselineToEdit.id, newTargetValue, token);
 
             // Refetch data to show updated target
             refetch();

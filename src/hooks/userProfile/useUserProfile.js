@@ -19,6 +19,7 @@ export const useUserProfile = () => {
             const { data: { user } } = await supabase.auth.getUser();
 
             if (!user) {
+                setUserProfile(null);
                 setLoading(false);
                 return;
             }
@@ -27,7 +28,8 @@ export const useUserProfile = () => {
             const token = session?.access_token;
             const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-            const response = await fetch(`${API_URL}/user_profiles_with_email?user_id=eq.${user.id}`, {
+            // Fetch user profile - using * since we granted SELECT permissions
+            const response = await fetch(`${API_URL}/user_profiles_with_email?user_id=eq.${user.id}&select=*`, {
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${token}`,

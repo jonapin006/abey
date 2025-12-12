@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoiceService } from '../../services/indicators/invoiceService';
+import { kpiService } from '../../services/indicators/kpiService';
 import { supabase } from '../../lib/supabaseClient';
 import {
     calculateAverageConsumption,
@@ -42,8 +42,8 @@ export const useKpiDashboard = (companyId, year = new Date().getFullYear()) => {
 
             // Fetch all data in parallel
             const [counts, baselinesData, invoicesResponse] = await Promise.all([
-                invoiceService.fetchInvoiceCounts(companyId, token),
-                invoiceService.fetchBaselines(companyId, year, token),
+                kpiService.fetchInvoiceCounts(companyId, token),
+                kpiService.fetchBaselines(companyId, year, token),
                 fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/invoices?headquarters.company_id=eq.${companyId}&select=*,headquarters!inner(company_id)`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -121,7 +121,7 @@ export const useKpiDashboard = (companyId, year = new Date().getFullYear()) => {
 
             if (!token) throw new Error('No hay sesión activa');
 
-            await invoiceService.generateKpis(companyId, invoiceType, year, token);
+            await kpiService.generateKpis(companyId, invoiceType, year, token);
 
             // Refetch data after generation
             await fetchData();

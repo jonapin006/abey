@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 /**
  * Custom hook for managing invoice filters
@@ -13,7 +13,7 @@ export const useInvoiceFilters = () => {
         headquarters_id: '',
     });
 
-    const updateFilter = (key, value) => {
+    const updateFilter = useCallback((key, value) => {
         setFilters(prev => {
             const newFilters = { ...prev, [key]: value };
 
@@ -24,16 +24,16 @@ export const useInvoiceFilters = () => {
 
             return newFilters;
         });
-    };
+    }, []);
 
-    const resetFilters = () => {
+    const resetFilters = useCallback(() => {
         setFilters({
             year: currentYear,
             company_id: '',
             type: '',
             headquarters_id: '',
         });
-    };
+    }, [currentYear]);
 
     return {
         filters,

@@ -20,7 +20,7 @@ import { InvoiceFilters } from '../components/indicators/InvoiceFilters';
 import { MatrixButtons } from '../components/indicators/MatrixButtons';
 import { InvoiceTable } from '../components/indicators/InvoiceTable';
 import { InvoiceUploadModal } from '../components/indicators/InvoiceUploadModal';
-import { KPI } from '../components/indicators/KPI';
+import { KpiCards } from '../components/indicators/KpiCards';
 
 // Generate years array (current year + 5 years back)
 const generateYears = () => {
@@ -124,9 +124,9 @@ function Indicadores() {
 
                 {/* KPI Dashboard */}
                 <Box sx={{ mb: 4 }}>
-                    <KpiDashboard
+                    <KpiCards
                         companyId={filters.company_id}
-                        onUploadClick={handleOpenModal}
+                        year={filters.year}
                     />
                 </Box>
 

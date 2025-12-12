@@ -16,6 +16,8 @@ export const InvoiceFilters = ({
     headquarters,
     years,
     compact = false,
+    showCompanySelector = true, // Default to true for backward compatibility
+    hasHeadquarters = true, // Default to true for backward compatibility
 }) => {
     return (
         <Grid container spacing={compact ? 1.5 : 2} sx={{ mb: compact ? 0 : 2 }}>
@@ -37,24 +39,26 @@ export const InvoiceFilters = ({
                 </FormControl>
             </Grid>
 
-            {/* Company Filter */}
-            <Grid item xs={6} sm={3}>
-                <FormControl fullWidth sx={{ minWidth: '150px' }}>
-                    <InputLabel>Empresa</InputLabel>
-                    <Select
-                        value={filters.company_id}
-                        label="Empresa"
-                        onChange={(e) => onFilterChange('company_id', e.target.value)}
-                    >
-                        <MenuItem value="">Todas</MenuItem>
-                        {companies.map((company) => (
-                            <MenuItem key={company.id} value={company.id}>
-                                {company.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
+            {/* Company Filter - Only show when showCompanySelector is true */}
+            {showCompanySelector && (
+                <Grid item xs={6} sm={3}>
+                    <FormControl fullWidth sx={{ minWidth: '150px' }}>
+                        <InputLabel>Empresa</InputLabel>
+                        <Select
+                            value={filters.company_id}
+                            label="Empresa"
+                            onChange={(e) => onFilterChange('company_id', e.target.value)}
+                        >
+                            <MenuItem value="">Todas</MenuItem>
+                            {companies.map((company) => (
+                                <MenuItem key={company.id} value={company.id}>
+                                    {company.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+            )}
 
             {/* Type Filter */}
             <Grid item xs={6} sm={3}>
@@ -79,7 +83,7 @@ export const InvoiceFilters = ({
             <Grid item xs={6} sm={3}>
                 <FormControl
                     fullWidth
-                    disabled={!filters.company_id}
+                    disabled={!hasHeadquarters}
                     sx={{ minWidth: '150px' }}
                 >
                     <InputLabel>Sede</InputLabel>

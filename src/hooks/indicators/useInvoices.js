@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { invoiceService } from '../../services/indicators/invoiceService';
+import { transformInvoiceForDisplay } from '../../services/indicators/invoiceBusinessService';
 
 /**
  * Custom hook for managing invoices list
+ * Uses invoiceBusinessService for data transformation
  */
 export const useInvoices = (filters) => {
     const [invoices, setInvoices] = useState([]);
@@ -19,7 +21,10 @@ export const useInvoices = (filters) => {
             const token = session?.access_token;
 
             const data = await invoiceService.fetchInvoices(filters, token);
-            setInvoices(data);
+
+            // Transform data for display using business logic service
+            const transformedData = data.map(transformInvoiceForDisplay);
+            setInvoices(transformedData);
         } catch (err) {
             console.error('Error fetching invoices:', err);
             setError('Error al cargar las facturas');

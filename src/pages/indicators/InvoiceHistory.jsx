@@ -15,6 +15,7 @@ import { useInvoiceFilters } from '../../hooks/indicators/useInvoiceFilters';
 import { useInvoices } from '../../hooks/indicators/useInvoices';
 import { useInvoiceUpload } from '../../hooks/indicators/useInvoiceUpload';
 import { useCompanies } from '../../hooks/companies/useCompanies';
+import { useUserProfile } from '../../hooks/userProfile/useUserProfile';
 import { useHeadquarters } from '../../hooks/headquarters/useHeadquarters';
 import { InvoiceFilters } from '../../components/indicators/InvoiceFilters';
 import { MatrixButtons } from '../../components/indicators/MatrixButtons';
@@ -35,8 +36,31 @@ function InvoiceHistory() {
     const { filters, updateFilter } = useInvoiceFilters();
 
     // Data fetching
-    const { companies } = useCompanies();
-    const { headquarters } = useHeadquarters(filters.company_id);
+    const { companies, loading: companiesLoading } = useCompanies();
+    const { userProfile, loading: profileLoading } = useUserProfile();
+
+    // Filter companies based on user's role and company_id
+    // Super Admin (hierarchy_level = 1) can see all companies
+    // Regular users only see their assigned company
+    const isSuperAdmin = userProfile?.hierarchy_level === 1;
+    const filteredCompanies = isSuperAdmin
+        ? companies
+        : (userProfile?.company_id
+            ? companies.filter(company => company.id === userProfile.company_id)
+            : companies);
+
+    // Only show dropdown if user has access to multiple companies AND data is loaded
+    const showCompanySelector = !profileLoading && !companiesLoading && filteredCompanies.length > 1;
+
+    // For users with a single company, we DON'T set the company_id filter
+    // Instead, we rely on RLS (Row Level Security) policies to automatically
+    // filter the invoices based on the user's permissions
+    // This avoids conflicts with RLS policies that might block explicit company_id filters
+
+    // For headquarters, use the filter company_id if set, otherwise use user's company_id
+    const headquartersCompanyId = filters.company_id || userProfile?.company_id || '';
+
+    const { headquarters } = useHeadquarters(headquartersCompanyId);
     const { invoices, loading, error: fetchError, refetch } = useInvoices(filters);
 
     // Upload
@@ -114,7 +138,9 @@ function InvoiceHistory() {
                     <InvoiceFilters
                         filters={filters}
                         onFilterChange={updateFilter}
-                        companies={companies}
+                        companies={filteredCompanies}
+                        showCompanySelector={showCompanySelector}
+                        hasHeadquarters={headquarters.length > 0}
                         headquarters={headquarters}
                         years={years}
                     />
@@ -157,7 +183,7 @@ function InvoiceHistory() {
                     onUpload={handleUpload}
                     uploading={uploading}
                     error={uploadError}
-                    companies={companies}
+                    companies={filteredCompanies}
                     headquarters={uploadHeadquarters}
                     years={years}
                 />

@@ -14,18 +14,41 @@ import {
 } from '@mui/material';
 import Layout from '../../components/Layout.jsx';
 import { useCompanies } from '../../hooks/companies/useCompanies';
+import { useUserProfile } from '../../hooks/userProfile/useUserProfile';
+import { KpiCards } from '../../components/indicators/KpiCards';
 import { KPI } from '../../components/indicators/KPI';
-import { invoiceService } from '../../services/indicators/invoiceService';
+import { kpiService } from '../../services/indicators/kpiService';
 import { supabase } from '../../lib/supabaseClient';
 
-function KPIPage() {
-    const [selectedCompany, setSelectedCompany] = React.useState('');
-    const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
+export const KPIPage = () => {
+    const [selectedCompany, setSelectedCompany] = useState('');
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [selectedTypeToGenerate, setSelectedTypeToGenerate] = useState('');
     const [generating, setGenerating] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
-    const { companies } = useCompanies();
+    const { companies, loading: companiesLoading } = useCompanies();
+    const { userProfile, loading: profileLoading } = useUserProfile();
+
+    // Filter companies based on user's role and company_id
+    // Super Admin (hierarchy_level = 1) can see all companies
+    // Regular users only see their assigned company
+    const isSuperAdmin = userProfile?.hierarchy_level === 1;
+    const filteredCompanies = isSuperAdmin
+        ? companies
+        : (userProfile?.company_id
+            ? companies.filter(company => company.id === userProfile.company_id)
+            : companies);
+
+    // Only show dropdown if user has access to multiple companies AND data is loaded
+    const showCompanySelector = !profileLoading && !companiesLoading && filteredCompanies.length > 1;
+
+    // Auto-select company when user has only one company
+    React.useEffect(() => {
+        if (filteredCompanies.length === 1) {
+            setSelectedCompany(filteredCompanies[0].id);
+        }
+    }, [filteredCompanies]);
 
     // Generate years array (current year + 5 years back)
     const years = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i);
@@ -53,7 +76,7 @@ function KPIPage() {
             }
 
             // Pass year to generateKpis
-            await invoiceService.generateKpis(selectedCompany, selectedTypeToGenerate, selectedYear, token);
+            await kpiService.generateKpis(selectedCompany, selectedTypeToGenerate, selectedYear, token);
 
             setSuccess(`KPIs de ${selectedTypeToGenerate} generados exitosamente`);
             setSelectedTypeToGenerate('');
@@ -98,21 +121,23 @@ function KPIPage() {
                 {/* Company Filter + Year Filter + KPI Generation */}
                 <Paper sx={{ p: 2, mb: 3 }}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-                        {/* Company Selector */}
-                        <FormControl sx={{ minWidth: 200 }}>
-                            <InputLabel>Empresa</InputLabel>
-                            <Select
-                                value={selectedCompany}
-                                label="Empresa"
-                                onChange={(e) => setSelectedCompany(e.target.value)}
-                            >
-                                {companies.map((company) => (
-                                    <MenuItem key={company.id} value={company.id}>
-                                        {company.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        {/* Company Selector - Only show when user has multiple companies */}
+                        {showCompanySelector && (
+                            <FormControl sx={{ minWidth: 200 }}>
+                                <InputLabel>Empresa</InputLabel>
+                                <Select
+                                    value={selectedCompany}
+                                    label="Empresa"
+                                    onChange={(e) => setSelectedCompany(e.target.value)}
+                                >
+                                    {filteredCompanies.map((company) => (
+                                        <MenuItem key={company.id} value={company.id}>
+                                            {company.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
 
                         {/* Year Selector */}
                         <FormControl sx={{ minWidth: 120 }}>
